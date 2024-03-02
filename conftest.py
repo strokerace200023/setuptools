@@ -37,12 +37,8 @@ collect_ignore = [
     'setuptools/_vendor',
     'pkg_resources/_vendor',
     'setuptools/config/_validate_pyproject',
+    'setuptools/modified.py',
 ]
-
-
-if sys.version_info < (3, 6):
-    collect_ignore.append('docs/conf.py')  # uses f-strings
-    collect_ignore.append('pavement.py')
 
 
 if sys.version_info < (3, 9) or sys.platform == 'cygwin':

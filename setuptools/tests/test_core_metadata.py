@@ -5,8 +5,7 @@ from email import message_from_string
 
 import pytest
 
-# TODO: replace with `from packaging.metadata import Metadata` in future versions:
-from ._packaging_compat import Metadata
+from packaging.metadata import Metadata
 
 from setuptools import sic, _reqs
 from setuptools.dist import Distribution
@@ -64,7 +63,7 @@ def __read_test_cases():
 
     params = functools.partial(dict, base)
 
-    test_cases = [
+    return [
         ('Metadata version 1.0', params()),
         (
             'Metadata Version 1.0: Short long description',
@@ -156,8 +155,6 @@ def __read_test_cases():
         ),
     ]
 
-    return test_cases
-
 
 @pytest.mark.parametrize('name,attrs', __read_test_cases())
 def test_read_metadata(name, attrs):
@@ -209,7 +206,7 @@ def __maintainer_test_cases():
 
         return d1
 
-    test_cases = [
+    return [
         ('No author, no maintainer', attrs.copy()),
         (
             'Author (no e-mail), no maintainer',
@@ -267,8 +264,6 @@ def __maintainer_test_cases():
         ('Maintainer unicode', merge_dicts(attrs, {'maintainer': 'Jan Łukasiewicz'})),
     ]
 
-    return test_cases
-
 
 @pytest.mark.parametrize('name,attrs', __maintainer_test_cases())
 def test_maintainer_author(name, attrs, tmpdir):
@@ -286,7 +281,7 @@ def test_maintainer_author(name, attrs, tmpdir):
 
     dist.metadata.write_pkg_info(fn_s)
 
-    with io.open(str(fn.join('PKG-INFO')), 'r', encoding='utf-8') as f:
+    with open(str(fn.join('PKG-INFO')), 'r', encoding='utf-8') as f:
         pkg_info = f.read()
 
     assert _valid_metadata(pkg_info)
@@ -316,7 +311,7 @@ def test_parity_with_metadata_from_pypa_wheel(tmp_path):
         # Example with complex requirement definition
         python_requires=">=3.8",
         install_requires="""
-        packaging==23.0
+        packaging==23.2
         ordered-set==3.1.1
         more-itertools==8.8.0; extra == "other"
         jaraco.text==3.7.0
@@ -334,7 +329,7 @@ def test_parity_with_metadata_from_pypa_wheel(tmp_path):
                 ini2toml[lite]>=0.9
                 """,
             "other": [],
-        }
+        },
     )
     # Generate a PKG-INFO file using setuptools
     dist = Distribution(attrs)
